@@ -65,6 +65,25 @@ services:
       timeout: 10s
       retries: 3
 
+  unstructured-api:
+    image: tapiocapioca/unstructured-api:latest
+    container_name: unstructured-api
+    ports:
+      - "${UNSTRUCTURED_PORT:-9104}:8000"
+    volumes:
+      # Linux/Mac - read-only mount
+      - ${HOME}:/host:ro
+      # Windows (uncomment if on Windows)
+      # - ${USERPROFILE}:/host:ro
+    environment:
+      - UNSTRUCTURED_API_KEY=${UNSTRUCTURED_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   # Dati persistenti (su disco host)
   anythingllm-storage:
