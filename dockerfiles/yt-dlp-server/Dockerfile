@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 # Installa yt-dlp e dipendenze
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    apt-get install -y ffmpeg curl && \
     pip install --no-cache-dir yt-dlp fastapi uvicorn && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
