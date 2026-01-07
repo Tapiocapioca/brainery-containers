@@ -1,15 +1,19 @@
 # Brainery Containers
 
-Docker containers per il sistema RAG Brainery.
+Docker containers for the Brainery RAG system.
+
+[🇮🇹 Italiano](README.it.md) | [🇨🇳 中文](README.zh.md)
 
 ## Containers
 
-| Container | Porta | Scopo |
-|-----------|-------|-------|
+| Container | Port | Purpose |
+|-----------|------|---------|
 | **crawl4ai** | 9100 | Web scraping |
 | **yt-dlp-server** | 9101 | YouTube transcripts |
 | **whisper-server** | 9102 | Audio transcription |
 | **anythingllm** | 9103 | RAG database |
+
+**Port range 9100-9103** is workflow-ordered and uses IANA unassigned space to minimize conflicts. Default ports work out-of-box; optional `.env` override available.
 
 ## Quick Start
 
@@ -17,7 +21,7 @@ Docker containers per il sistema RAG Brainery.
 docker-compose up -d
 ```
 
-Verifica che tutto funzioni:
+Verify containers are running:
 ```bash
 curl http://localhost:9100/health   # crawl4ai
 curl http://localhost:9101/health   # yt-dlp-server
@@ -25,60 +29,65 @@ curl http://localhost:9102/health   # whisper-server
 curl http://localhost:9103/api/ping # anythingllm
 ```
 
-## Gestione Dati e Volumi
+## Data Management
 
-Brainery usa una **strategia mista** per ottimizzare performance e persistenza:
+Brainery uses a **mixed strategy** to optimize performance and persistence:
 
-### 📁 Dati Persistenti (su disco host)
-- **anythingllm-storage**: Database RAG con documenti e embeddings
-- **whisper-models**: Modelli Whisper pre-scaricati (~150MB)
+### 📁 Persistent Data (host disk)
+- **anythingllm-storage**: RAG database with documents and embeddings
+- **whisper-models**: Pre-downloaded Whisper models (~150MB)
 
 Location:
 - Windows: `C:\ProgramData\Docker\volumes\`
 - Linux: `/var/lib/docker/volumes/`
 
-### 💾 Cache Temporanee (in RAM)
-- **crawl4ai**: Cache web scraping (512MB tmpfs)
-- **yt-dlp-server**: Cache video temporanei (1GB tmpfs)
+### 💾 Temporary Caches (RAM)
+- **crawl4ai**: Web scraping cache (512MB tmpfs)
+- **yt-dlp-server**: Temporary video cache (1GB tmpfs)
 
-**Vantaggi:**
-- ✅ Performance elevate (RAM)
-- ✅ Nessun I/O su disco per cache
-- ✅ Database RAG preservato tra restart
-- ✅ Modelli Whisper non riscaricati
+**Advantages:**
+- ✅ High performance (RAM)
+- ✅ No disk I/O for caches
+- ✅ RAG database preserved across restarts
+- ✅ Whisper models not re-downloaded
 
-**Requisiti RAM:** ~1.5GB dedicati a cache + modelli in esecuzione
+**RAM requirements:** ~1.5GB dedicated for caches + models in execution
 
 ---
 
-## Personalizzazione Porte
+## Port Customization
 
-Le porte di default (9100-9103) funzionano per la maggior parte degli utenti.
+Default ports (9100-9103) work for most users.
 
-Se hai un conflitto, crea un file `.env`:
+If you have a conflict, create a `.env` file:
 
 ```bash
 cp .env.example .env
-# Modifica le porte nel file .env
+# Edit ports in .env file
 docker-compose up -d
 ```
 
-## Immagini Disponibili
+## Available Images
 
-Tutte le immagini sono su Docker Hub:
+All images are published on Docker Hub:
 - `tapiocapioca/crawl4ai:latest`
 - `tapiocapioca/yt-dlp-server:latest`
 - `tapiocapioca/whisper-server:latest`
 - `tapiocapioca/anythingllm:latest`
 
+## Documentation
+
+- **[Installation Guide](docs/en/installation.md)** - Step-by-step setup
+- **[Usage Examples](docs/en/usage.md)** - Practical examples
+
 ## Versioning
 
-Usa Semantic Versioning: `v1.0.0`, `v1.1.0`, ecc.
+Uses Semantic Versioning: `v1.0.0`, `v1.1.0`, etc.
 
-## Repository
+## Repository Structure
 
-- **brainery-containers**: Questo repository (Docker containers)
-- **brainery**: Claude Code skill principale
+- **brainery-containers**: This repository (Docker containers)
+- **brainery**: Main Claude Code skill
 
 ## License
 
