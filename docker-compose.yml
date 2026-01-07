@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  crawl4ai:
+    image: tapiocapioca/crawl4ai:latest
+    container_name: crawl4ai
+    ports:
+      - "11235:11235"
+    volumes:
+      - crawl4ai-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  anythingllm:
+    image: tapiocapioca/anythingllm:latest
+    container_name: anythingllm
+    ports:
+      - "3001:3001"
+    environment:
+      - STORAGE_DIR=/app/server/storage
+    volumes:
+      - anythingllm-storage:/app/server/storage
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  yt-dlp-server:
+    image: tapiocapioca/yt-dlp-server:latest
+    container_name: yt-dlp-server
+    ports:
+      - "8501:8501"
+    volumes:
+      - ytdlp-cache:/app/temp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  whisper-server:
+    image: tapiocapioca/whisper-server:latest
+    container_name: whisper-server
+    ports:
+      - "8502:8502"
+    volumes:
+      - whisper-models:/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8502/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  crawl4ai-data:
+  anythingllm-storage:
+  ytdlp-cache:
+  whisper-models:
