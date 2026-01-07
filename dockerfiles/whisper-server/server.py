@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-import whisper
+from faster_whisper import WhisperModel
 
 app = FastAPI()
 
-# Carica modello Whisper all'avvio
-model = whisper.load_model("base")
+# Carica modello Whisper all'avvio (CPU, ottimizzato)
+model = WhisperModel("base", device="cpu", compute_type="int8")
 
 @app.get("/health")
 async def health():
