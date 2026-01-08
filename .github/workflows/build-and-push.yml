@@ -18,8 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Note: unstructured-api removed from build - using official quay.io image directly
-        service: [crawl4ai, anythingllm, yt-dlp-server, whisper-server]
+        # Only build custom services with our code
+        # Using official images directly: crawl4ai, anythingllm, unstructured-api
+        service: [yt-dlp-server, whisper-server]
 
     steps:
       - name: Checkout code
